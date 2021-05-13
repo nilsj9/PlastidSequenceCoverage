@@ -13,7 +13,7 @@ This pipeline illustrates the individual steps taken during the analysis of sequ
 Part i: Read mapping
 --------------------
 
-Input: _foo bar baz_
+Input: _samples\_list.csv_
 
 ##### Conducting read mapping on a series of plastid genome records
 ```
@@ -33,31 +33,41 @@ IFS=$OLDIFS
 Part ii: Metadata extraction
 ----------------------------
 
-Input: _foo bar baz_
+Input: _samples\_list.csv_
 
-##### Foo Bar Baz
+##### Extract metadata of a series of plastid genome records
 ```
-foo bar baz
+#!/bin/bash
+
+INPUT=/PATH/TO/samples_list.csv
+OLDIFS=$IFS
+IFS=','
+[ ! -f $INPUT ] && { echo "$INPUT file not found"; exit 99; }
+while read -r SRA SAMPLE ACCESSION;
+do
+bash ./metadata_extraction.sh $SAMPLE $ACCESSION $SRA </dev/null
+done < $INPUT
+IFS=$OLDIFS
 ```
 
 
 Part iii: Sequencing depth and evenness
 ---------------------------------------
 
-Input: _foo bar baz_
+Input: _Customize path to resources in code_
 
-##### Foo Bar Baz
+##### Gather all information into a single csv file.
 ```
-Rscript plastid_analysis.R
+Rscript depth_and_evenness.R
 ```
 
 
 Part iv: Statistical analysis
 -----------------------------
 
-Input: _foo bar baz_
+Input: _stats\_ready\_metadata.csv_
 
-##### Foo Bar Baz
+##### Conduct statistical analysis on a series of plastid genome records
 ```
-foo bar baz
+Rscript plastid_analysis.R
 ```
